@@ -1,0 +1,24 @@
+{
+  "name": "lmsbot",
+  "version": "1.0.0",
+  "description": "A discord bot for managing learning systems",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeCandyCat/LMS.git"
+  },
+  "author": "CandyCat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MeCandyCat/LMS/issues"
+  },
+  "homepage": "https://github.com/MeCandyCat/LMS#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "mongodb": "^5.0.1",
+    "node-json-db": "^2.1.4"
+  }
+}
