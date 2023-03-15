@@ -4,7 +4,7 @@ module.exports = {
     perms: ["teacher", "admin"],
     data: new SlashCommandBuilder()
         .setName("poll")
-        .setDescription("Create a yes/no poll")
+        .setDescription("Create a yes/no poll.")
         .addStringOption((option) =>
             option
                 .setName("question")
@@ -25,9 +25,9 @@ module.exports = {
             .setColor("#0099ff")
             .setTitle("Poll")
             .setDescription(question)
-            .setFooter({ text: "React to vote", icon_url:interaction.user.avatarURL() });
+            .setFooter({ text: "React to vote.", icon_url:interaction.user.avatarURL() });
         
-        interaction.reply({content:"poll created", ephemeral:true})
+        interaction.reply({content:"poll created.", ephemeral:true})
         interaction.channel.send({ embeds: [pollEmbed] }).then((msg) => {
             msg.react("🔼");
             msg.react("🔽");
