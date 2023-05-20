@@ -1,4 +1,6 @@
 {
-"token": "BOT TOKEN",
-"mongodb": "MongoDB TOKEN"
+    "token": "bot token",
+    "clientId": "clientID",
+    "imgbb": "imgbb token",
+    "mongodb": "mongoDB token"
 }
