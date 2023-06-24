@@ -17,6 +17,7 @@ let addToConfig = async (guildId, type, config, value) => {
         { upsert: true }
     );
 };
+
 let hasPerm = async (interaction, perms) => {
     try {
         if (interaction.guild.ownerId == interaction.user.id) {
@@ -29,8 +30,8 @@ let hasPerm = async (interaction, perms) => {
         }
 
         const memberRoles = interaction.member.roles.cache;
-        for (perm in perms) {
-            if (memberRoles.has(roles[perms[perm]])) {
+        for (perm of perms) {
+            if (memberRoles.has(roles[perm])) {
                 return true;
             }
         }
