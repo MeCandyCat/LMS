@@ -87,7 +87,7 @@ module.exports = {
                         }
                     )
                     .setColor("Green")
-                    .setThumbnail("https://i.imgur.com/ABGHLdd.png");
+                    .setThumbnail("https://i.imgur.com/ILO7FEK.png");
                 interaction.reply({ embeds: [embed] });
             }
         }
