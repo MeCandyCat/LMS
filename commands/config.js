@@ -31,12 +31,15 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand.setName("view").setDescription("View your current config")),
     async execute(interaction, Mongo) {
         let guild = interaction.guild;
+
         switch (interaction.options.getSubcommand()) {
             case "role": {
-                let role = interaction.options.getRole("role").id;
-                let type = interaction.options.getString("user");
+                await interaction.deferReply();
+                let type = await interaction.options.getString("user");
+                let role = await interaction.options.getRole("role").id;
+
                 await Mongo.addToConfig(guild.id, "roles", type, role);
-                await interaction.reply(`You have successfully configured \`${type}\` to <@&${role}>`);
+                interaction.editReply(`You have successfully configured \`${type}\` role to <@&${role}>`);
                 break;
             }
             case "view": {
@@ -54,7 +57,7 @@ module.exports = {
                             > Student:  ${student ? await guild.roles.fetch(student) : undefinedMsg}
                             
                             *use </config role:1070904796070039613> to configure roles.*`;
-                            
+
                 let embed = new EmbedBuilder()
                     .setTitle("Your server's current configuration.")
                     .addFields({ name: "Roles", value: message })
