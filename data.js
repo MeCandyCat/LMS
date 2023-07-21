@@ -5,7 +5,7 @@ const client = new MongoClient(mongodb);
 const db = client.db("lmsdb");
 const configCollection = db.collection("settings");
 const classesCollection = db.collection("classes");
-const assignmentsCollection = db.collection("assignments")
+const assignmentsCollection = db.collection("assignments");
 
 let getConfig = async (guildId) => {
     return await configCollection.findOne({ _id: guildId });
@@ -20,19 +20,22 @@ let addToConfig = async (guildId, type, config, value) => {
 
 let hasPerm = async (interaction, perms) => {
     try {
+        // if the person who ran the command is the server owner allow
         if (interaction.guild.ownerId == interaction.user.id) {
-            return true
-        }
-        const conf = await configCollection.findOne({ _id: interaction.guild.id }, { roles: 1, _id: 0 });
-        const roles = conf["roles"];
-        if ("owner" in perms) {
-            return false
+            return true;
         }
 
-        const memberRoles = interaction.member.roles.cache;
-        for (perm of perms) {
-            if (memberRoles.has(roles[perm])) {
-                return true;
+        // check if owner is in required perms. if not check if the user have required perms
+        if (!("owner" in perms)) {
+            const conf = await configCollection.findOne({ _id: interaction.guild.id }, { roles: 1, _id: 0 });
+            const roles = conf["roles"];
+
+            const memberRoles = interaction.member.roles.cache;
+            // loops through permissions and checks if user has them
+            for (perm of perms) {
+                if (memberRoles.has(roles[perm])) {
+                    return true;
+                }
             }
         }
         return false;
@@ -54,21 +57,32 @@ let deleteClass = async (categoryId) => {
 };
 
 let createAssignment = async (assignmentId) => {
-    return await assignmentsCollection.insertOne({_id: assignmentId})
-}
+    return await assignmentsCollection.insertOne({ _id: assignmentId });
+};
 
 let deleteAssignment = async (assignmentId) => {
-    return await assignmentsCollection.deleteOne({_id:assignmentId}) 
-}
+    return await assignmentsCollection.deleteOne({ _id: assignmentId });
+};
 
 let doesAssignmentExists = async (assignmentId) => {
-    let assignment  = await assignmentsCollection.findOne({_id:assignmentId})
+    let assignment = await assignmentsCollection.findOne({ _id: assignmentId });
     try {
-
-        if ( assignment._id === assignmentId) {
-            return true
+        if (assignment._id === assignmentId) {
+            return true;
         }
-    } catch { return false}
-}
+    } catch {
+        return false;
+    }
+};
 
-module.exports = { addToConfig, getConfig, hasPerm, createClass, getClass, deleteClass, createAssignment, deleteAssignment, doesAssignmentExists };
+module.exports = {
+    addToConfig,
+    getConfig,
+    hasPerm,
+    createClass,
+    getClass,
+    deleteClass,
+    createAssignment,
+    deleteAssignment,
+    doesAssignmentExists,
+};

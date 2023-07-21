@@ -28,14 +28,6 @@ module.exports = {
                     option.setName("role").setDescription("The role you need to assign.").setRequired(true)
                 )
         )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName("selfregister")
-                .setDescription("Set wheather a student can register them self.")
-                .addBooleanOption((option) =>
-                    option.setName("set").setDescription("set true or false").setRequired(true)
-                )
-        )
         .addSubcommand((subcommand) => subcommand.setName("view").setDescription("View your current config")),
     async execute(interaction, Mongo) {
         let guild = interaction.guild;
@@ -47,45 +39,25 @@ module.exports = {
                 await interaction.reply(`You have successfully configured \`${type}\` to <@&${role}>`);
                 break;
             }
-            case "selfregister": {
-                let set = interaction.options.getBoolean("set");
-                await Mongo.addToConfig(guild.id, "perms", "selfRegister", set).then(() => {
-                    interaction.reply(`Now students ${set ? "can" : "can't"} register by themselves`);
-                });
-                break;
-            }
             case "view": {
                 let config = await Mongo.getConfig(guild.id);
-                let roles = "";
-                let selfReg;
-                try {
-                    roleConf = config["roles"];
-                } catch (e) {
-                    roleConf = {};
-                }
+                roleConf = config?.roles || {};
+
                 const undefinedMsg = "**Please configure the role.**";
+
                 const admin = roleConf["admin"];
                 const teacher = roleConf["teacher"];
                 const student = roleConf["student"];
-                roles = `> Admin:  ${admin ? await guild.roles.fetch(admin) : undefinedMsg}
+
+                const message = `> Admin:  ${admin ? await guild.roles.fetch(admin) : undefinedMsg}
                             > Teacher:  ${teacher ? await guild.roles.fetch(teacher) : undefinedMsg}
                             > Student:  ${student ? await guild.roles.fetch(student) : undefinedMsg}
                             
                             *use </config role:1070904796070039613> to configure roles.*`;
-                try {
-                    selfReg = config.perms.selfRegister;
-                } catch {
-                    selfReg = "undefined";
-                }
+                            
                 let embed = new EmbedBuilder()
                     .setTitle("Your server's current configuration.")
-                    .addFields(
-                        { name: "Roles", value: roles },
-                        {
-                            name: "Self Registration",
-                            value: `\`${selfReg}\`\n*use </config self-register:1070904796070039613> to set-up.*`,
-                        }
-                    )
+                    .addFields({ name: "Roles", value: message })
                     .setColor("Green")
                     .setThumbnail("https://i.imgur.com/ILO7FEK.png");
                 interaction.reply({ embeds: [embed] });
